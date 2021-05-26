@@ -10,49 +10,70 @@ var speed : int = 200
 var jumpForce : int = 400
 var gravity : int = 800
 var t = Timer.new()
-
+var state_machine
 
 var vel : Vector2 = Vector2()
 var grounded : bool = false
 
-onready var _animated_sprite = $AnimatedSprite
+
+onready var _animation_player = $AnimationPlayer
+
+
+
 
 
 func _ready():
-	_animated_sprite.play("Idle")
-
+	#_animation_player.play("Idle")
+	state_machine = $AnimationTree.get("parameters/playback")
+	state_machine.start("Idle")
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	vel.x = 0
 	
-	
+	var current = state_machine.get_current_node()
 	if Input.is_action_pressed("move_left"):
+		$Sprite.flip_h = false
+		$"Sprite/Sword Hit".scale = Vector2(1,1)
 		vel.x -= speed
-		_animated_sprite.play("Running")
+		
 	if Input.is_action_pressed("move_right"):
+		$Sprite.flip_h = true
+		$"Sprite/Sword Hit".scale = Vector2(-1,1)
 		vel.x += speed
-		_animated_sprite.play("Running")
+		
 	if Input.is_action_pressed("attack"):
-		_animated_sprite.play("Attack")
+		state_machine.travel("Attack")
+		return
 	
 		
 	vel = move_and_slide(vel, Vector2.UP)
+	if vel.length() == 0:
+		state_machine.travel("Idle")
+	if vel.length() != 0:
+		if vel.y < 0:
+			state_machine.travel("Jump")
+		state_machine.travel("Running")
 	
 	vel.y += gravity * delta
 	
 	if Input.is_action_pressed("jump") and is_on_floor():
-		_animated_sprite.play("Jump")
+		state_machine.travel("Jump")
 		vel.y -= jumpForce
 		
 		
 		
-	if vel.x < 0:
-		_animated_sprite.flip_h = false
-	if vel.x > 0:
-		_animated_sprite.flip_h = true
 		
-func _on_AnimatedSprite_animation_finished():
-	if $AnimatedSprite.animation != 'Idle':
-		$AnimatedSprite.play('Idle')
+	
+		
 
 
+
+
+
+
+
+
+func _on_Sword_Hit_area_entered(area):
+	if area.is_in_group("hurtbox"):
+		pass
