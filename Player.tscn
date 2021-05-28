@@ -105,11 +105,13 @@ animation = "Running"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=15]
 switch_mode = 2
+auto_advance = true
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=16]
 switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=17]
+switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=18]
 
@@ -117,6 +119,7 @@ switch_mode = 2
 switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=20]
+switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachine" id=21]
 states/Attack/node = SubResource( 7 )
@@ -127,9 +130,9 @@ states/Jump/node = SubResource( 9 )
 states/Jump/position = Vector2( 281.643, 267.92 )
 states/Running/node = SubResource( 10 )
 states/Running/position = Vector2( 301, 29 )
-transitions = [ "Idle", "Running", SubResource( 11 ), "Running", "Idle", SubResource( 12 ), "Idle", "Attack", SubResource( 13 ), "Running", "Attack", SubResource( 14 ), "Attack", "Idle", SubResource( 15 ), "Jump", "Idle", SubResource( 16 ), "Jump", "Running", SubResource( 17 ), "Running", "Jump", SubResource( 18 ), "Attack", "Running", SubResource( 19 ), "Idle", "Jump", SubResource( 20 ) ]
+transitions = [ "Idle", "Running", SubResource( 11 ), "Running", "Idle", SubResource( 12 ), "Idle", "Attack", SubResource( 13 ), "Running", "Attack", SubResource( 14 ), "Attack", "Idle", SubResource( 15 ), "Jump", "Idle", SubResource( 16 ), "Attack", "Running", SubResource( 17 ), "Idle", "Jump", SubResource( 18 ), "Running", "Jump", SubResource( 19 ), "Jump", "Running", SubResource( 20 ) ]
 start_node = "Idle"
-graph_offset = Vector2( -101.357, 67.564 )
+graph_offset = Vector2( -53.357, 29.564 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=22]
 
@@ -151,7 +154,7 @@ position = Vector2( 1, 0 )
 texture = ExtResource( 5 )
 hframes = 8
 vframes = 5
-frame = 35
+frame = 3
 
 [node name="Sword Hit" type="Area2D" parent="Sprite"]
 

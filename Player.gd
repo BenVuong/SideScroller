@@ -31,7 +31,10 @@ func _ready():
 func _physics_process(delta):
 	vel.x = 0
 	
-	var current = state_machine.get_current_node()
+	
+	if Input.is_action_just_pressed("resetGame"):
+		get_tree().reload_current_scene()
+	
 	if Input.is_action_pressed("move_left"):
 		$Sprite.flip_h = false
 		$"Sprite/Sword Hit".scale = Vector2(1,1)
