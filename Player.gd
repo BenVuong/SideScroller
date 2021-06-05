@@ -11,6 +11,7 @@ var jumpForce : int = 400
 var gravity : int = 800
 var t = Timer.new()
 var state_machine
+var hp : int = 512
 
 var vel : Vector2 = Vector2()
 var grounded : bool = false
@@ -56,7 +57,8 @@ func _physics_process(delta):
 	if vel.length() != 0:
 		if vel.y < 0:
 			state_machine.travel("Jump")
-		state_machine.travel("Running")
+		else:	
+			state_machine.travel("Running")
 	
 	vel.y += gravity * delta
 	
