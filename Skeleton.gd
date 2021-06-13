@@ -61,6 +61,7 @@ func _on_hurtbox_area_entered(area):
 	if area.get_name() == "Sword Hit":
 		print(health)
 		if health >0:
+			state_machine.travel("hit")
 			health-=1
 		else:
 			state_machine.travel("death")
@@ -87,6 +88,11 @@ func die():
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == 'death':
 		queue_free()
+		print("number of skeletons:")
+		print(get_tree().get_nodes_in_group("enemies").size()-1)
+		ui.setEnemyNum(get_tree().get_nodes_in_group("enemies").size()-1)
+		if((get_tree().get_nodes_in_group("enemies").size()-1)==0):
+			ui.setWinMessage()
 
 
 func _on_Player_Detector_body_entered(body):

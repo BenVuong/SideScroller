@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=2]
 [ext_resource path="res://Bandits/Sprites/Heavy Bandit/HeavyBandit.png" type="Texture" id=5]
@@ -32,6 +32,25 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=24]
+resource_name = "Death"
+
+[sub_resource type="Animation" id=25]
+resource_name = "Hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 32, 33, 34 ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -84,6 +103,9 @@ extents = Vector2( 13.4744, 10.2893 )
 [sub_resource type="AnimationNodeAnimation" id=7]
 animation = "Attack"
 
+[sub_resource type="AnimationNodeAnimation" id=26]
+animation = "Hit"
+
 [sub_resource type="AnimationNodeAnimation" id=8]
 resource_local_to_scene = true
 animation = "Idle"
@@ -121,20 +143,31 @@ switch_mode = 2
 [sub_resource type="AnimationNodeStateMachineTransition" id=20]
 switch_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=28]
+switch_mode = 2
+auto_advance = true
+
 [sub_resource type="AnimationNodeStateMachine" id=21]
 states/Attack/node = SubResource( 7 )
 states/Attack/position = Vector2( 413, 143 )
+states/Hit/node = SubResource( 26 )
+states/Hit/position = Vector2( 21.6158, 124.564 )
 states/Idle/node = SubResource( 8 )
-states/Idle/position = Vector2( 208, 143 )
+states/Idle/position = Vector2( 209, 143 )
 states/Jump/node = SubResource( 9 )
 states/Jump/position = Vector2( 281.643, 267.92 )
 states/Running/node = SubResource( 10 )
 states/Running/position = Vector2( 301, 29 )
-transitions = [ "Idle", "Running", SubResource( 11 ), "Running", "Idle", SubResource( 12 ), "Idle", "Attack", SubResource( 13 ), "Running", "Attack", SubResource( 14 ), "Attack", "Idle", SubResource( 15 ), "Jump", "Idle", SubResource( 16 ), "Attack", "Running", SubResource( 17 ), "Idle", "Jump", SubResource( 18 ), "Running", "Jump", SubResource( 19 ), "Jump", "Running", SubResource( 20 ) ]
+transitions = [ "Idle", "Running", SubResource( 11 ), "Running", "Idle", SubResource( 12 ), "Idle", "Attack", SubResource( 13 ), "Running", "Attack", SubResource( 14 ), "Attack", "Idle", SubResource( 15 ), "Jump", "Idle", SubResource( 16 ), "Attack", "Running", SubResource( 17 ), "Idle", "Jump", SubResource( 18 ), "Running", "Jump", SubResource( 19 ), "Jump", "Running", SubResource( 20 ), "Idle", "Hit", SubResource( 27 ), "Hit", "Idle", SubResource( 28 ) ]
 start_node = "Idle"
-graph_offset = Vector2( -53.357, 29.564 )
+graph_offset = Vector2( -270.384, 11.3179 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=22]
+
+[sub_resource type="RectangleShape2D" id=23]
+extents = Vector2( 10, 18.6609 )
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 2 )
@@ -145,6 +178,8 @@ shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 2 )
+anims/Death = SubResource( 24 )
+anims/Hit = SubResource( 25 )
 anims/Idle = SubResource( 3 )
 anims/Jump = SubResource( 4 )
 anims/Running = SubResource( 5 )
@@ -154,7 +189,7 @@ position = Vector2( 1, 0 )
 texture = ExtResource( 5 )
 hframes = 8
 vframes = 5
-frame = 2
+frame = 3
 
 [node name="Sword Hit" type="Area2D" parent="Sprite"]
 
@@ -169,4 +204,10 @@ anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/playback = SubResource( 22 )
 
+[node name="PlayerHurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHurtBox"]
+shape = SubResource( 23 )
+
 [connection signal="area_entered" from="Sprite/Sword Hit" to="." method="_on_Sword_Hit_area_entered"]
+[connection signal="area_entered" from="PlayerHurtBox" to="." method="_on_PlayerHurtBox_area_entered"]
